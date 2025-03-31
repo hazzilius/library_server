@@ -5,6 +5,8 @@ import com.example.server.response.BaseResponse;
 import com.example.server.response.DataResponse;
 import com.example.server.response.ListResponse;
 import com.example.server.service.GenreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/genre")
+@Tag(name = "Жанры", description = "API для управления жанрами")
 public class GenreController {
 
     private final GenreService genreService;
@@ -21,6 +24,7 @@ public class GenreController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Получить список всех жанров", description = "Возвращает список жанров")
     public ResponseEntity<ListResponse<Genre>> getAll(
             @RequestParam(defaultValue = "0") @Min(0) Integer offset,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) Integer limit
@@ -31,6 +35,7 @@ public class GenreController {
     }
 
     @GetMapping
+    @Operation(summary = "Получить жанр", description = "Возвращает жанр по ID")
     public ResponseEntity<DataResponse<Genre>> byId(@RequestParam Long id){
         try {
             return ResponseEntity.ok(
@@ -44,6 +49,7 @@ public class GenreController {
     }
 
     @PostMapping
+    @Operation(summary = "Сохранить жанр", description = "Создает новую запись о жанре")
     public ResponseEntity<DataResponse<Genre>> save(@RequestBody Genre genre){
         try {
             return ResponseEntity.ok(
@@ -57,6 +63,7 @@ public class GenreController {
     }
 
     @PutMapping
+    @Operation(summary = "Редактировать жанр", description = "Изменяет уже существующую запись о жанре")
     public ResponseEntity<BaseResponse> update(@RequestBody Genre genre){
         try {
             genreService.update(genre);
@@ -71,6 +78,7 @@ public class GenreController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Поиск по названию", description = "Возвращает список жанров по названию")
     public ResponseEntity<ListResponse<Genre>> findByName(
             @RequestParam String name,
             @RequestParam(defaultValue = "0") @Min(0) Integer offset,
@@ -89,6 +97,7 @@ public class GenreController {
     }
 
     @DeleteMapping
+    @Operation(summary = "Удалить жанр", description = "Удаляет жанр по ID")
     public ResponseEntity<BaseResponse> delete(@RequestParam Long id){
         try {
             genreService.delete(id);

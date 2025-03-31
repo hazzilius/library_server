@@ -5,6 +5,8 @@ import com.example.server.response.BaseResponse;
 import com.example.server.response.DataResponse;
 import com.example.server.response.ListResponse;
 import com.example.server.service.CityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/city")
+@Tag(name = "Города", description = "API для управления городами")
 public class CityController {
     private final CityService cityService;
 
@@ -20,6 +23,7 @@ public class CityController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Получить список всех городов", description = "Возвращает список городов")
     public ResponseEntity<ListResponse<City>> getAll(
             @RequestParam(defaultValue = "0") @Min(0) Integer offset,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) Integer limit
@@ -30,6 +34,7 @@ public class CityController {
     }
 
     @GetMapping
+    @Operation(summary = "Получить город", description = "Возвращает город по ID")
     public ResponseEntity<DataResponse<City>> byId(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(
@@ -43,6 +48,7 @@ public class CityController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Поиск по названию", description = "Возвращает список городов по названию")
     public ResponseEntity<ListResponse<City>> findByName(
             @RequestParam String name,
             @RequestParam(defaultValue = "0") @Min(0) Integer offset,
@@ -60,6 +66,7 @@ public class CityController {
     }
 
     @PostMapping
+    @Operation(summary = "Сохранить город", description = "Создает новую запись о городе")
     public ResponseEntity<DataResponse<City>> save(@RequestBody City city) {
         try {
             return ResponseEntity.ok(
@@ -73,6 +80,7 @@ public class CityController {
     }
 
     @PutMapping
+    @Operation(summary = "Редактировать город", description = "Изменяет запись об уже существующем городе")
     public ResponseEntity<BaseResponse> update(@RequestBody City city) {
         try {
             cityService.update(city);
@@ -87,6 +95,7 @@ public class CityController {
     }
 
     @DeleteMapping
+    @Operation(summary = "Удалить город", description = "Удаляет город по ID")
     public ResponseEntity<BaseResponse> delete(@RequestParam Long id){
         try {
             cityService.delete(id);

@@ -5,6 +5,8 @@ import com.example.server.response.BaseResponse;
 import com.example.server.response.DataResponse;
 import com.example.server.response.ListResponse;
 import com.example.server.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/book")
+@Tag(name = "Книги", description = "API для управления книгами")
 public class BookController {
     private final BookService bookService;
 
@@ -20,6 +23,7 @@ public class BookController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Получить список всех книг", description = "Возвращает список книг")
     public ResponseEntity<ListResponse<Book>> getAll(
             @RequestParam(defaultValue = "0") @Min(0) Integer offset,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) Integer limit
@@ -30,6 +34,7 @@ public class BookController {
     }
 
     @GetMapping
+    @Operation(summary = "Получить книгу", description = "Возвращает книгу по ID")
     public ResponseEntity<DataResponse<Book>> byId(@RequestParam Long id){
         try {
             return ResponseEntity.ok(
@@ -43,6 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Поиск по названию", description = "Возвращает список книг по названию")
     public ResponseEntity<ListResponse<Book>> findByTitle(
             @RequestParam String title,
             @RequestParam(defaultValue = "0") @Min(0) Integer offset,
@@ -60,6 +66,7 @@ public class BookController {
     }
 
     @PostMapping
+    @Operation(summary = "Сохранить книгу ", description = "Создает новую запись о книге")
     public ResponseEntity<DataResponse<Book>> save(@RequestBody Book book){
         try {
             return ResponseEntity.ok(
@@ -73,6 +80,7 @@ public class BookController {
     }
 
     @PutMapping
+    @Operation(summary = "Редактировать книгу", description = "Изменяет уже существующую запись об книге ")
     public ResponseEntity<BaseResponse> update(@RequestBody Book book){
         try {
             bookService.update(book);
@@ -87,6 +95,7 @@ public class BookController {
     }
 
     @DeleteMapping
+    @Operation(summary = "Удалить книгу", description = "Удаляет книгу по ID")
     public ResponseEntity<BaseResponse> delete(@RequestParam Long id){
         try {
             bookService.delete(id);
